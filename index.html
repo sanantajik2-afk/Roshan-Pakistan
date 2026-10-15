@@ -202,6 +202,56 @@ document.getElementById('logoutBtn').onclick = async () => {
   msg.textContent = error ? error.message : 'آپ لاگ آؤٹ ہو گئے ہیں۔';
 };
 
+const SUPABASE_URL = 'https://zuiiqxggskvrhynvgmik.supabase.co';
+const SUPABASE_KEY = 'یہاں اپنی اسی Supabase پروجیکٹ کی Publishable key ڈالیں';
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const authBox = document.createElement('div');
+authBox.className = 'card';
+authBox.innerHTML = `
+  <h3>رجسٹریشن اور لاگ اِن</h3>
+  <label>ای میل</label>
+  <input id="authEmail" type="email" placeholder="اپنی ای میل لکھیں">
+  <label>پاس ورڈ</label>
+  <input id="authPass" type="password" placeholder="کم از کم 6 حروف">
+  <button id="registerBtn">نیا اکاؤنٹ بنائیں</button>
+  <button id="loginBtn">لاگ اِن</button>
+  <button id="logoutBtn">لاگ آؤٹ</button>
+  <p id="authMessage"></p>
+`;
+
+document.getElementById('account').appendChild(authBox);
+const msg = document.getElementById('authMessage');
+
+document.getElementById('registerBtn').onclick = async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPass').value;
+
+  if (!email || password.length < 6) {
+    msg.textContent = 'ای میل اور کم از کم 6 حروف کا پاس ورڈ لکھیں۔';
+    return;
+  }
+
+  const { error } = await db.auth.signUp({ email, password });
+  msg.textContent = error
+    ? error.message
+    : 'رجسٹریشن کی درخواست مکمل۔ اگر تصدیقی ای میل آئے تو اسے چیک کریں۔';
+};
+
+document.getElementById('loginBtn').onclick = async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPass').value;
+
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  msg.textContent = error ? error.message : 'لاگ اِن کامیاب!';
+};
+
+document.getElementById('logoutBtn').onclick = async () => {
+  const { error } = await db.auth.signOut();
+  msg.textContent = error ? error.message : 'آپ لاگ آؤٹ ہو گئے ہیں۔';
+};
+
 update();
 </script>
 </body>
