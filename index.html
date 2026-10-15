@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>روشن پاکستان</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f6f3;color:#18382b}
+header{background:#075b3b;color:white;padding:22px 16px;text-align:center}
+header h1{margin:0 0 8px;font-size:28px}
+header p{margin:0;font-size:14px}
+nav{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;background:#fff;padding:12px}
+button{border:0;border-radius:9px;padding:11px 15px;background:#08784b;color:white;font-size:15px;cursor:pointer}
+nav button{background:#e4f2e9;color:#075b3b}
+main{max-width:720px;margin:auto;padding:16px}
+.notice{background:#fff4d6;padding:12px;border-radius:10px;font-size:13px;line-height:1.7}
+h2{font-size:21px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:white;padding:16px;border-radius:14px;box-shadow:0 2px 8px #0000000c}
+.number{font-size:25px;font-weight:bold;color:#08784b;margin:8px 0}
+section{margin:18px 0}
+input,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccd9d0;border-radius:8px;font-size:16px}
+label{font-size:14px}
+.hidden{display:none}
+footer{text-align:center;padding:20px;color:#607368;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>🌱 روشن پاکستان</h1>
+<p>پولٹری فارم اور انڈوں کا انتظام</p>
+</header>
+<nav>
+<button onclick="show('home')">ہوم</button>
+<button onclick="show('account')">اکاؤنٹ</button>
+<button onclick="show('farm')">میرا فارم</button>
+<button onclick="show('eggs')">انڈے اور فروخت</button>
+<button onclick="show('payments')">ادائیگی</button>
+</nav>
+<main>
+<div class="notice">
+<strong>اہم اطلاع:</strong> یہ ابتدائی نمونہ ہے۔ فی الحال کوئی حقیقی رقم جمع، منتقل یا نکلوائی نہیں جا سکتی۔ حقیقی لین دین کے لیے محفوظ سرور اور منظور شدہ ادائیگی کا نظام درکار ہے۔
+</div>
+
+<section id="home">
+<h2>خوش آمدید!</h2>
+<div class="card">
+<h3>روشن پاکستان میں خوش آمدید</h3>
+<p>مرغیوں، انڈوں، خریداری اور فروخت کا ریکارڈ ایک جگہ دیکھیں۔</p>
+<button onclick="show('account')">اکاؤنٹ کھولیں</button>
+</div>
+<div class="cards" style="margin-top:12px">
+<div class="card">🐔<p>میری مرغیاں</p><div class="number" id="hens">0</div></div>
+<div class="card">🥚<p>آج کے انڈے</p><div class="number" id="eggsCount">0</div></div>
+<div class="card">📦<p>فروخت شدہ انڈے</p><div class="number" id="sold">0</div></div>
+<div class="card">💰<p>نمونہ بیلنس</p><div class="number" id="balance">Rs 0</div></div>
+</div>
+</section>
+
+<section id="account" class="hidden">
+<h2>اکاؤنٹ</h2>
+<div class="card">
+<label>آپ کا نام</label>
+<input id="userName" placeholder="اپنا نام لکھیں">
+<label>موبائل نمبر</label>
+<input id="phone" type="tel" placeholder="03XXXXXXXXX">
+<p>یہ صرف ظاہری نمونہ ہے، محفوظ رجسٹریشن ابھی منسلک نہیں۔</p>
+<button onclick="saveName()">نام محفوظ کریں</button>
+<p id="welcome"></p>
+</div>
+</section>
+
+<section id="farm" class="hidden">
+<h2>مرغیوں کا فارم</h2>
+<div class="card">
+<p>نمونہ مرغیوں کی تعداد: <strong id="farmHens">0</strong></p>
+<label>مرغیوں کی تعداد شامل کریں</label>
+<input id="henInput" type="number" min="1" placeholder="مثلاً 5">
+<button onclick="addHens()">نمونہ تعداد شامل کریں</button>
+<p>انڈوں کی روزانہ پیداوار کا حساب یہاں نمونے کے طور پر دکھایا جائے گا۔ حقیقی پیداوار کی تصدیق فارم کے ریکارڈ سے ہونی چاہیے۔</p>
+</div>
+</section>
+
+<section id="eggs" class="hidden">
+<h2>انڈے اور فروخت</h2>
+<div class="card">
+<p>موجودہ نمونہ انڈے: <strong id="availableEggs">0</strong></p>
+<label>انڈوں کی تعداد</label>
+<input id="sellInput" type="number" min="1" placeholder="فروخت کے لیے تعداد">
+<label>فی انڈہ قیمت (روپے)</label>
+<input id="priceInput" type="number" min="1" placeholder="مثلاً 30">
+<button onclick="sellEggs()">نمونہ فروخت درج کریں</button>
+<p id="saleMessage"></p>
+</div>
+</section>
+
+<section id="payments" class="hidden">
+<h2>ڈپازٹ اور وِڈراول</h2>
+<div class="card">
+<p>ایزی پیسہ اور بینک کی سہولت مستقبل میں شامل کی جائے گی۔</p>
+<label>ادائیگی کا طریقہ</label>
+<select id="method">
+<option>ایزی پیسہ</option>
+<option>بینک اکاؤنٹ</option>
+</select>
+<label>رقم (روپے)</label>
+<input id="amount" type="number" min="1" placeholder="رقم لکھیں">
+<button onclick="paymentRequest('ڈپازٹ')">ڈپازٹ کی درخواست</button>
+<button onclick="paymentRequest('وِڈراول')" style="background:#315d92">وِڈراول کی درخواست</button>
+<p id="paymentMessage"></p>
+</div>
+</section>
+</main>
+<footer>روشن پاکستان © 2026 — ابتدائی نمونہ</footer>
+
+<script>
+let hens=0,eggs=0,sold=0,balance=0;
+function show(id){
+document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+}
+function update(){
+document.getElementById('hens').textContent=hens;
+document.getElementById('farmHens').textContent=hens;
+document.getElementById('eggsCount').textContent=eggs;
+document.getElementById('availableEggs').textContent=eggs-sold;
+document.getElementById('sold').textContent=sold;
+document.getElementById('balance').textContent='Rs '+balance;
+}
+function saveName(){
+let n=document.getElementById('userName').value.trim();
+if(!n){alert('اپنا نام لکھیں');return}
+document.getElementById('welcome').textContent='خوش آمدید، '+n+'! یہ صرف نمونہ اکاؤنٹ ہے۔';
+}
+function addHens(){
+let n=Number(document.getElementById('henInput').value);
+if(!Number.isInteger(n)||n<1){alert('درست تعداد لکھیں');return}
+hens+=n;
+eggs+=n;
+document.getElementById('henInput').value='';
+update();
+alert('نمونے میں مرغیاں اور ایک دن کے انڈے شامل کیے گئے۔');
+}
+function sellEggs(){
+let n=Number(document.getElementById('sellInput').value);
+let p=Number(document.getElementById('priceInput').value);
+if(!Number.isInteger(n)||n<1||n>eggs-sold||p<=0){alert('انڈوں کی تعداد اور قیمت درست درج کریں');return}
+sold+=n;balance+=n*p;
+document.getElementById('saleMessage').textContent='نمونہ فروخت: '+n+' انڈے، رقم Rs '+(n*p)+'۔ حقیقی فروخت نہیں ہوئی۔';
+update();
+}
+function paymentRequest(type){
+document.getElementById('paymentMessage').textContent='یہ '+type+' کا صرف ڈیمو ہے۔ کوئی رقم بھیجی یا نکلوائی نہیں گئی۔ حقیقی ادائیگی ابھی فعال نہیں۔';
+}
+update();
+</script>
+</body>
+</html>
