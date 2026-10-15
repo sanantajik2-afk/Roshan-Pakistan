@@ -203,7 +203,7 @@ document.getElementById('logoutBtn').onclick = async () => {
 };
 
 const SUPABASE_URL = 'https://zuiiqxggskvrhynvgmik.supabase.co';
-const SUPABASE_KEY = 'یہاں اپنی اسی Supabase پروجیکٹ کی Publishable key ڈالیں';
+const SUPABASE_KEY = sb_publishable_S8bn30VAj1bEmQM7RZy_3g_7YAGewKt';
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -251,6 +251,121 @@ document.getElementById('logoutBtn').onclick = async () => {
   const { error } = await db.auth.signOut();
   msg.textContent = error ? error.message : 'آپ لاگ آؤٹ ہو گئے ہیں۔';
 };
+
+let hens = 0, eggs = 0, sold = 0, balance = 0;
+
+function show(id) {
+  document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function update() {
+  document.getElementById('hens').textContent = hens;
+  document.getElementById('farmHens').textContent = hens;
+  document.getElementById('eggsCount').textContent = eggs;
+  document.getElementById('availableEggs').textContent = eggs - sold;
+  document.getElementById('sold').textContent = sold;
+  document.getElementById('balance').textContent = 'Rs ' + balance;
+}
+
+function saveName() {
+  let n = document.getElementById('userName').value.trim();
+  if (!n) {
+    alert('اپنا نام لکھیں');
+    return;
+  }
+  document.getElementById('welcome').textContent =
+    'خوش آمدید، ' + n + '! یہ صرف نمونہ اکاؤنٹ ہے۔';
+}
+
+function addHens() {
+  let n = Number(document.getElementById('henInput').value);
+  if (!Number.isInteger(n) || n < 1) {
+    alert('درست تعداد لکھیں');
+    return;
+  }
+  hens += n;
+  eggs += n;
+  document.getElementById('henInput').value = '';
+  update();
+  alert('نمونے میں مرغیاں اور انڈے شامل کیے گئے۔');
+}
+
+function sellEggs() {
+  let n = Number(document.getElementById('sellInput').value);
+  let p = Number(document.getElementById('priceInput').value);
+
+  if (!Number.isInteger(n) || n < 1 || n > eggs - sold || p <= 0) {
+    alert('انڈوں کی تعداد اور قیمت درست درج کریں');
+    return;
+  }
+
+  sold += n;
+  balance += n * p;
+  document.getElementById('saleMessage').textContent =
+    'نمونہ فروخت: ' + n + ' انڈے، رقم Rs ' + (n * p) +
+    '۔ حقیقی فروخت نہیں ہوئی۔';
+  update();
+}
+
+function paymentRequest(type) {
+  document.getElementById('paymentMessage').textContent =
+    'یہ ' + type + ' کا صرف ڈیمو ہے۔ کوئی حقیقی رقم بھیجی یا نکلوائی نہیں گئی۔';
+}
+
+// Supabase کنکشن
+const SUPABASE_URL = 'https://zuiiqxggskvrhynvgmik.supabase.co';
+const SUPABASE_KEY = 'یہاں اپنی اصل Publishable key رکھیں';
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// رجسٹریشن اور لاگ اِن
+const authBox = document.createElement('div');
+authBox.className = 'card';
+authBox.innerHTML = `
+  <h3>رجسٹریشن اور لاگ اِن</h3>
+  <label>ای میل</label>
+  <input id="authEmail" type="email" placeholder="اپنی ای میل لکھیں">
+  <label>پاس ورڈ</label>
+  <input id="authPass" type="password" placeholder="کم از کم 6 حروف">
+  <button id="registerBtn">نیا اکاؤنٹ بنائیں</button>
+  <button id="loginBtn">لاگ اِن</button>
+  <button id="logoutBtn">لاگ آؤٹ</button>
+  <p id="authMessage"></p>
+`;
+
+document.getElementById('account').appendChild(authBox);
+const msg = document.getElementById('authMessage');
+
+document.getElementById('registerBtn').onclick = async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPass').value;
+
+  if (!email || password.length < 6) {
+    msg.textContent = 'ای میل اور کم از کم 6 حروف کا پاس ورڈ لکھیں۔';
+    return;
+  }
+
+  const { error } = await db.auth.signUp({ email, password });
+  msg.textContent = error
+    ? error.message
+    : 'رجسٹریشن کی درخواست مکمل۔ اگر تصدیقی ای میل آئے تو اسے چیک کریں۔';
+};
+
+document.getElementById('loginBtn').onclick = async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPass').value;
+
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  msg.textContent = error ? error.message : 'لاگ اِن کامیاب!';
+};
+
+document.getElementById('logoutBtn').onclick = async () => {
+  const { error } = await db.auth.signOut();
+  msg.textContent = error ? error.message : 'آپ لاگ آؤٹ ہو گئے ہیں۔';
+};
+
+update();
 
 update();
 </script>
